@@ -7,7 +7,7 @@ Static redirect page for sharing Peak workout templates via HTTPS links.
 When a Peak user shares a workout, the app generates an HTTPS link:
 
 ```
-https://burakugurelli.github.io/peak-share/?d=<base64-encoded-workout>
+https://train-with-peak.github.io/peak-share/?d=<base64-encoded-workout>
 ```
 
 The page decodes the Base64 payload, displays a workout preview, and offers an "Open in Peak" button that triggers a `peak://import-workout` deep link.
@@ -30,11 +30,18 @@ The page decodes the Base64 payload, displays a workout preview, and offers an "
 }
 ```
 
+### Limits
+
+- Max payload size: 10,000 characters
+- Max exercises per workout: 20
+
 ## Security
 
 - **Content Security Policy** restricts all resource loading
 - No `eval()`, no `innerHTML` with user data — only `textContent` and `createTextNode()`
 - JSON schema validation before rendering
+- Exercise array size guard (max 20)
+- Individual exercise field type validation
 - Payload size guard (10,000 char limit)
 - No tracking, cookies, localStorage, or external requests
 - All data lives in the URL — nothing is stored server-side
