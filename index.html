@@ -9,7 +9,7 @@
     <!-- Open Graph (static — crawlers don't execute JS) -->
     <meta property="og:title" content="Peak — Shared Workout">
     <meta property="og:description" content="Tap to open this workout in Peak">
-    <meta property="og:image" content="https://burakugurelli.github.io/peak-share/og-image.png">
+    <meta property="og:image" content="https://train-with-peak.github.io/peak-share/og-image.png">
     <meta property="og:type" content="website">
 
     <style>
@@ -149,6 +149,12 @@
                 return;
             }
 
+            // S2: Guard against oversized exercise arrays
+            if (json.exercises.length > 50) {
+                showError('Workout has too many exercises.');
+                return;
+            }
+
             // Build UI safely (textContent only, no innerHTML with user data)
             card.textContent = ''; // clear noscript
 
@@ -179,11 +185,13 @@
                 var ex = exercises[i];
                 var li = document.createElement('li');
 
+                // S5: Validate exercise name type
                 var nameSpan = document.createElement('span');
-                nameSpan.textContent = typeof ex.name === 'string' ? ex.name : 'Unknown';
+                nameSpan.textContent = (typeof ex.name === 'string' && ex.name.length > 0) ? ex.name : 'Unknown';
                 li.appendChild(nameSpan);
 
-                if (typeof ex.sets === 'number' && ex.sets > 0) {
+                // S5: Validate sets type
+                if (typeof ex.sets === 'number' && ex.sets > 0 && ex.sets <= 100) {
                     var setsSpan = document.createElement('span');
                     setsSpan.className = 'sets';
                     setsSpan.textContent = ex.sets + ' set' + (ex.sets !== 1 ? 's' : '');
