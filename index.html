@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:">
+    <title>Peak — Shared Workout</title>
+
+    <!-- Open Graph (static — crawlers don't execute JS) -->
+    <meta property="og:title" content="Peak — Shared Workout">
+    <meta property="og:description" content="Tap to open this workout in Peak">
+    <meta property="og:image" content="https://burakugurelli.github.io/peak-share/og-image.png">
+    <meta property="og:type" content="website">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+        .card {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 0.5px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .logo {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+            border-radius: 14px;
+        }
+        .workout-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+        .exercise-count {
+            font-size: 14px;
+            color: rgba(255,255,255,0.48);
+            margin-bottom: 24px;
+        }
+        .exercise-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+        .exercise-list li {
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.72);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .exercise-list li .sets {
+            font-size: 13px;
+            color: rgba(255,255,255,0.36);
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+        .open-btn {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: 999px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.15s;
+        }
+        .open-btn:hover { opacity: 0.85; }
+        .fallback {
+            margin-top: 16px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.36);
+        }
+        .fallback a {
+            color: rgba(255,255,255,0.56);
+            text-decoration: underline;
+        }
+        .error-msg {
+            font-size: 15px;
+            color: rgba(255,255,255,0.48);
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="card">
+        <noscript>
+            <p class="error-msg">Please enable JavaScript to view this shared workout.</p>
+        </noscript>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            var MAX_PAYLOAD = 10000;
+            var card = document.getElementById('card');
+
+            // Read ?d= parameter
+            var params = new URLSearchParams(window.location.search);
+            var encoded = params.get('d');
+
+            if (!encoded || encoded.length > MAX_PAYLOAD) {
+                showError('Invalid or missing workout data.');
+                return;
+            }
+
+            // Decode URL-safe Base64
+            var base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+            var pad = base64.length % 4;
+            if (pad > 0) base64 += '===='.substring(pad);
+
+            var json;
+            try {
+                json = JSON.parse(atob(base64));
+            } catch (e) {
+                showError('Could not decode workout data.');
+                return;
+            }
+
+            // Validate schema
+            if (typeof json.version !== 'number' || json.version < 1 ||
+                typeof json.name !== 'string' || json.name.length === 0 ||
+                !Array.isArray(json.exercises)) {
+                showError('Invalid workout format.');
+                return;
+            }
+
+            // Build UI safely (textContent only, no innerHTML with user data)
+            card.textContent = ''; // clear noscript
+
+            // Logo
+            var logo = document.createElement('img');
+            logo.className = 'logo';
+            logo.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzFBMUExQSIvPjxwYXRoIGQ9Ik0xOCAzOFYxOGwxMCAxMCAxMC0xMHYyMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==';
+            logo.alt = 'Peak';
+            card.appendChild(logo);
+
+            // Workout name
+            var nameEl = document.createElement('div');
+            nameEl.className = 'workout-name';
+            nameEl.textContent = json.name;
+            card.appendChild(nameEl);
+
+            // Exercise count
+            var countEl = document.createElement('div');
+            countEl.className = 'exercise-count';
+            countEl.textContent = json.exercises.length + ' exercise' + (json.exercises.length !== 1 ? 's' : '');
+            card.appendChild(countEl);
+
+            // Exercise list (max 20)
+            var list = document.createElement('ul');
+            list.className = 'exercise-list';
+            var exercises = json.exercises.slice(0, 20);
+            for (var i = 0; i < exercises.length; i++) {
+                var ex = exercises[i];
+                var li = document.createElement('li');
+
+                var nameSpan = document.createElement('span');
+                nameSpan.textContent = typeof ex.name === 'string' ? ex.name : 'Unknown';
+                li.appendChild(nameSpan);
+
+                if (typeof ex.sets === 'number' && ex.sets > 0) {
+                    var setsSpan = document.createElement('span');
+                    setsSpan.className = 'sets';
+                    setsSpan.textContent = ex.sets + ' set' + (ex.sets !== 1 ? 's' : '');
+                    li.appendChild(setsSpan);
+                }
+
+                list.appendChild(li);
+            }
+            if (json.exercises.length > 20) {
+                var moreLi = document.createElement('li');
+                moreLi.textContent = '+ ' + (json.exercises.length - 20) + ' more';
+                list.appendChild(moreLi);
+            }
+            card.appendChild(list);
+
+            // Open in Peak button
+            var deepLink = 'peak://import-workout?d=' + encoded;
+            var btn = document.createElement('button');
+            btn.className = 'open-btn';
+            btn.textContent = 'Open in Peak';
+            btn.addEventListener('click', function() {
+                window.location.href = deepLink;
+
+                // Fallback to App Store after 1.5s
+                setTimeout(function() {
+                    var fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'fallback';
+
+                    var text = document.createTextNode("Don't have Peak? ");
+                    fallbackDiv.appendChild(text);
+
+                    var link = document.createElement('a');
+                    link.href = 'https://apps.apple.com/app/peak/id6746268490';
+                    link.textContent = 'Get it on the App Store';
+                    fallbackDiv.appendChild(link);
+
+                    card.appendChild(fallbackDiv);
+                }, 1500);
+            });
+            card.appendChild(btn);
+
+            function showError(msg) {
+                card.textContent = '';
+                var p = document.createElement('p');
+                p.className = 'error-msg';
+                p.textContent = msg;
+                card.appendChild(p);
+            }
+        })();
+    </script>
+</body>
+</html>
