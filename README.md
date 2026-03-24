@@ -45,3 +45,14 @@ The page decodes the Base64 payload, displays a workout preview, and offers an "
 - Payload size guard (10,000 char limit)
 - No tracking, cookies, localStorage, or external requests
 - All data lives in the URL — nothing is stored server-side
+
+## Branding Assets
+
+- `logo.png`: in-page logo shown above the shared workout details.
+  - Keep aspect ratio intact (no forced square resize in CSS/HTML).
+  - Current source is the app logo exported from Peak assets.
+- `og-image-1200x630.png`: social/link preview image used by crawlers.
+  - Required size: **1200 x 630** (landscape).
+  - Keep the logo centered with aspect-fit on a dark background.
+
+When updating these assets, bump the query version in `index.html` (for example `?v=2` -> `?v=3`) to avoid stale CDN/social cache previews.
