@@ -51,10 +51,9 @@ The page decodes the Base64 payload, displays a workout preview, and offers an "
 - `logo.png`: in-page logo shown above the shared workout details.
   - Keep aspect ratio intact (no forced square resize in CSS/HTML).
   - Current source is the app logo exported from Peak assets.
-- `og-image-1200x630.png`: social/link preview image used by crawlers.
+- `og-image-1200x630-v3.png`: current social/link preview image used by crawlers.
   - Required size: **1200 x 630** (landscape).
   - Keep the logo centered with aspect-fit on a dark background.
-- `og-image-1200x630-v3.png`: current versioned OG image used by social crawlers.
   - Use a new filename suffix (`-v4`, `-v5`, ...) when updating previews.
 
 ### Social preview cache busting
