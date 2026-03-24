@@ -54,5 +54,11 @@ The page decodes the Base64 payload, displays a workout preview, and offers an "
 - `og-image-1200x630.png`: social/link preview image used by crawlers.
   - Required size: **1200 x 630** (landscape).
   - Keep the logo centered with aspect-fit on a dark background.
+- `og-image-1200x630-v3.png`: current versioned OG image used by social crawlers.
+  - Use a new filename suffix (`-v4`, `-v5`, ...) when updating previews.
 
-When updating these assets, bump the query version in `index.html` (for example `?v=2` -> `?v=3`) to avoid stale CDN/social cache previews.
+### Social preview cache busting
+
+- Do not rely only on query params for social cache refresh.
+- When preview art changes, publish a new file name (for example `og-image-1200x630-v4.png`) and update OG/Twitter tags in `index.html`.
+- Some crawlers (WhatsApp/Facebook) can cache previews for a while; filename versioning is the most reliable invalidation path.
