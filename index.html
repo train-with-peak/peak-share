@@ -30,47 +30,15 @@
             justify-content: center;
             padding: 24px;
             -webkit-font-smoothing: antialiased;
-            position: relative;
-            overflow-x: hidden;
-        }
-        body::before,
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-        body::before {
-            background:
-                radial-gradient(520px 260px at 18% -8%, rgba(255,255,255,0.12), transparent 68%),
-                radial-gradient(460px 240px at 88% 108%, rgba(255,255,255,0.08), transparent 70%);
-        }
-        body::after {
-            background: radial-gradient(380px 180px at 50% 0%, rgba(255,255,255,0.06), transparent 74%);
-            opacity: 0.72;
         }
         .card {
             max-width: 420px;
             width: 100%;
-            background: rgba(255,255,255,0.065);
-            border: 0.5px solid rgba(255,255,255,0.11);
+            background: rgba(255,255,255,0.06);
+            border: 0.5px solid rgba(255,255,255,0.08);
             border-radius: 20px;
             padding: 32px 24px;
             text-align: center;
-            box-shadow: 0 18px 42px rgba(0,0,0,0.36);
-            position: relative;
-            z-index: 1;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.24s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease;
-        }
-        .card.is-ready {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .header-block {
-            margin-bottom: 20px;
         }
         .logo {
             display: block;
@@ -79,33 +47,7 @@
             max-height: 84px;
             height: auto;
             object-fit: contain;
-            margin: 0 auto 14px;
-        }
-        .utility-badge {
-            display: inline-block;
-            margin-bottom: 12px;
-            padding: 5px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.86);
-            background: rgba(255,255,255,0.1);
-            border: 0.5px solid rgba(255,255,255,0.14);
-        }
-        .hero-intro {
-            font-size: 18px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 6px;
-            color: rgba(255,255,255,0.97);
-        }
-        .hero-subtext {
-            font-size: 14px;
-            line-height: 1.35;
-            margin-bottom: 14px;
-            color: rgba(255,255,255,0.6);
+            margin: 0 auto 20px;
         }
         .workout-name {
             font-size: 22px;
@@ -116,14 +58,12 @@
         .exercise-count {
             font-size: 14px;
             color: rgba(255,255,255,0.48);
-        }
-        .list-block {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .exercise-list {
             list-style: none;
             text-align: left;
-            margin-bottom: 0;
+            margin-bottom: 28px;
         }
         .exercise-list li {
             padding: 10px 14px;
@@ -136,16 +76,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        .exercise-list li:last-child { margin-bottom: 0; }
         .exercise-list li .sets {
             font-size: 13px;
             color: rgba(255,255,255,0.36);
             white-space: nowrap;
             margin-left: 12px;
         }
-        .cta-block { margin-top: 2px; }
         .open-btn {
             display: inline-block;
             background: #fff;
@@ -157,47 +94,22 @@
             text-decoration: none;
             cursor: pointer;
             border: none;
-            transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.2s ease;
-            box-shadow: 0 8px 20px rgba(255,255,255,0.16);
-            min-width: 190px;
+            transition: opacity 0.15s;
         }
-        .open-btn:hover { opacity: 0.92; transform: translateY(-1px); }
-        .open-btn:active,
-        .open-btn.is-pressed { transform: translateY(0) scale(0.98); }
-        .open-btn:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.24), 0 8px 20px rgba(255,255,255,0.16);
-        }
+        .open-btn:hover { opacity: 0.85; }
         .fallback {
-            margin-top: 12px;
+            margin-top: 16px;
             font-size: 13px;
-            line-height: 1.35;
-            color: rgba(255,255,255,0.46);
+            color: rgba(255,255,255,0.36);
         }
         .fallback a {
-            color: rgba(255,255,255,0.68);
+            color: rgba(255,255,255,0.56);
             text-decoration: underline;
-            text-underline-offset: 2px;
         }
         .error-msg {
             font-size: 15px;
             color: rgba(255,255,255,0.48);
             padding: 40px 0;
-        }
-        @media (hover: hover) {
-            .exercise-list li:hover {
-                background: rgba(255,255,255,0.075);
-                transform: translateX(2px);
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .card {
-                opacity: 1;
-                transform: none;
-                transition: none;
-            }
-            .open-btn, .exercise-list li { transition: none; }
-            .open-btn:hover { transform: none; }
         }
     </style>
 </head>
@@ -254,10 +166,6 @@
             // Build UI safely (textContent only, no innerHTML with user data)
             card.textContent = ''; // clear noscript
 
-            // Header block
-            var header = document.createElement('div');
-            header.className = 'header-block';
-
             // Logo
             var logo = document.createElement('img');
             logo.className = 'logo';
@@ -266,41 +174,21 @@
             logo.decoding = 'async';
             logo.loading = 'eager';
             logo.addEventListener('error', function() { logo.remove(); });
-            header.appendChild(logo);
-
-            var badge = document.createElement('div');
-            badge.className = 'utility-badge';
-            badge.textContent = 'Ready in 1 tap';
-            header.appendChild(badge);
-
-            var intro = document.createElement('div');
-            intro.className = 'hero-intro';
-            intro.textContent = 'Someone shared a workout with you';
-            header.appendChild(intro);
-
-            var sub = document.createElement('div');
-            sub.className = 'hero-subtext';
-            sub.textContent = 'Open it in Peak and start training.';
-            header.appendChild(sub);
+            card.appendChild(logo);
 
             // Workout name
             var nameEl = document.createElement('div');
             nameEl.className = 'workout-name';
             nameEl.textContent = json.name;
-            header.appendChild(nameEl);
+            card.appendChild(nameEl);
 
             // Exercise count
             var countEl = document.createElement('div');
             countEl.className = 'exercise-count';
             countEl.textContent = json.exercises.length + ' exercise' + (json.exercises.length !== 1 ? 's' : '');
-            header.appendChild(countEl);
-
-            card.appendChild(header);
+            card.appendChild(countEl);
 
             // Exercise list (max 20)
-            var listBlock = document.createElement('div');
-            listBlock.className = 'list-block';
-
             var list = document.createElement('ul');
             list.className = 'exercise-list';
             var exercises = json.exercises.slice(0, 20);
@@ -328,50 +216,36 @@
                 moreLi.textContent = '+ ' + (json.exercises.length - 20) + ' more';
                 list.appendChild(moreLi);
             }
-            listBlock.appendChild(list);
-            card.appendChild(listBlock);
+            card.appendChild(list);
 
-            // CTA block
-            var ctaBlock = document.createElement('div');
-            ctaBlock.className = 'cta-block';
-
+            // Open in Peak button
             var deepLink = 'peak://import-workout?d=' + encoded;
-            var appStoreURL = 'https://apps.apple.com/app/peak/id6746268490';
-            var wasBackgrounded = false;
-
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) wasBackgrounded = true;
-            });
-
+            var fallbackShown = false;
             var btn = document.createElement('button');
             btn.className = 'open-btn';
             btn.textContent = 'Open in Peak';
             btn.addEventListener('click', function() {
-                btn.classList.add('is-pressed');
-                setTimeout(function() { btn.classList.remove('is-pressed'); }, 140);
                 window.location.href = deepLink;
 
-                // Fallback to App Store when app is not installed.
+                // Fallback to App Store after 1.5s (only once)
+                if (fallbackShown) return;
+                fallbackShown = true;
                 setTimeout(function() {
-                    if (!wasBackgrounded) window.location.href = appStoreURL;
-                }, 1200);
+                    var fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'fallback';
+
+                    var text = document.createTextNode("Don't have Peak? ");
+                    fallbackDiv.appendChild(text);
+
+                    var link = document.createElement('a');
+                    link.href = 'https://apps.apple.com/app/peak/id6746268490';
+                    link.textContent = 'Get it on the App Store';
+                    fallbackDiv.appendChild(link);
+
+                    card.appendChild(fallbackDiv);
+                }, 1500);
             });
-            ctaBlock.appendChild(btn);
-
-            var fallbackDiv = document.createElement('div');
-            fallbackDiv.className = 'fallback';
-            var text = document.createTextNode("Don't have Peak yet? ");
-            fallbackDiv.appendChild(text);
-            var link = document.createElement('a');
-            link.href = appStoreURL;
-            link.textContent = 'Get it on the App Store';
-            fallbackDiv.appendChild(link);
-            ctaBlock.appendChild(fallbackDiv);
-
-            card.appendChild(ctaBlock);
-
-            // Subtle entrance after content is ready.
-            requestAnimationFrame(function() { card.classList.add('is-ready'); });
+            card.appendChild(btn);
 
             function showError(msg) {
                 card.textContent = '';
