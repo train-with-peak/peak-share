@@ -36,10 +36,13 @@
             text-align: center;
         }
         .logo {
-            width: 56px;
-            height: 56px;
+            display: block;
+            width: min(164px, 56vw);
+            max-width: 190px;
+            max-height: 84px;
+            height: auto;
+            object-fit: contain;
             margin: 0 auto 20px;
-            border-radius: 14px;
         }
         .workout-name {
             font-size: 22px;
