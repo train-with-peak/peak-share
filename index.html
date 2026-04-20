@@ -1,263 +1,537 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:">
-    <title>Peak — Shared Workout</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:" />
+  <title>Peak — Shared Import</title>
+  <meta property="og:title" content="Peak — Shared Workout">
+  <meta property="og:description" content="Tap to open this workout in Peak">
+  <meta property="og:url" content="https://train-with-peak.github.io/peak-share/">
+  <meta property="og:site_name" content="Peak">
+  <meta property="og:image" content="https://train-with-peak.github.io/peak-share/og-image-1200x630-v3.png">
+  <meta property="og:image:secure_url" content="https://train-with-peak.github.io/peak-share/og-image-1200x630-v3.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Peak shared workout">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://train-with-peak.github.io/peak-share/og-image-1200x630-v3.png">
+  <meta property="og:type" content="website">
+  <style>
+    :root {
+      --peak-color-background: #000000;
+      --peak-color-surface: rgba(255, 255, 255, 0.06);
+      --peak-color-surface-secondary: rgba(255, 255, 255, 0.04);
+      --peak-color-surface-muted: rgba(255, 255, 255, 0.025);
+      --peak-color-border-subtle: rgba(255, 255, 255, 0.08);
+      --peak-color-text-primary: rgba(255, 255, 255, 1);
+      --peak-color-text-secondary: rgba(255, 255, 255, 0.72);
+      --peak-color-text-tertiary: rgba(255, 255, 255, 0.48);
+      --peak-color-destructive: rgba(255, 76, 76, 0.86);
 
-    <!-- Open Graph (static — crawlers don't execute JS) -->
-    <meta property="og:title" content="Peak — Shared Workout">
-    <meta property="og:description" content="Tap to open this workout in Peak">
-    <meta property="og:url" content="https://train-with-peak.github.io/peak-share/">
-    <meta property="og:site_name" content="Peak">
-    <meta property="og:image" content="https://train-with-peak.github.io/peak-share/og-image-1200x630-v3.png">
-    <meta property="og:image:secure_url" content="https://train-with-peak.github.io/peak-share/og-image-1200x630-v3.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Peak shared workout">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://train-with-peak.github.io/peak-share/og-image-1200x630-v3.png">
-    <meta property="og:type" content="website">
+      --peak-space-xxs: 4px;
+      --peak-space-xs: 8px;
+      --peak-space-sm: 12px;
+      --peak-space-md: 16px;
+      --peak-space-lg: 24px;
+      --peak-space-xl: 32px;
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            -webkit-font-smoothing: antialiased;
-        }
-        .card {
-            max-width: 420px;
-            width: 100%;
-            background: rgba(255,255,255,0.06);
-            border: 0.5px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 32px 24px;
-            text-align: center;
-        }
-        .logo {
-            display: block;
-            width: min(164px, 56vw);
-            max-width: 190px;
-            max-height: 84px;
-            height: auto;
-            object-fit: contain;
-            margin: 0 auto 20px;
-        }
-        .workout-name {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            word-break: break-word;
-        }
-        .exercise-count {
-            font-size: 14px;
-            color: rgba(255,255,255,0.48);
-            margin-bottom: 24px;
-        }
-        .exercise-list {
-            list-style: none;
-            text-align: left;
-            margin-bottom: 28px;
-        }
-        .exercise-list li {
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 10px;
-            margin-bottom: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.72);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .exercise-list li .sets {
-            font-size: 13px;
-            color: rgba(255,255,255,0.36);
-            white-space: nowrap;
-            margin-left: 12px;
-        }
-        .open-btn {
-            display: inline-block;
-            background: #fff;
-            color: #000;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 14px 32px;
-            border-radius: 999px;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.15s;
-        }
-        .open-btn:hover { opacity: 0.85; }
-        .fallback {
-            margin-top: 16px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.36);
-        }
-        .fallback a {
-            color: rgba(255,255,255,0.56);
-            text-decoration: underline;
-        }
-        .error-msg {
-            font-size: 15px;
-            color: rgba(255,255,255,0.48);
-            padding: 40px 0;
-        }
-    </style>
+      --peak-radius-sm: 8px;
+      --peak-radius-md: 12px;
+      --peak-radius-lg: 16px;
+      --peak-radius-xl: 20px;
+      --peak-radius-pill: 999px;
+
+      --peak-motion-quick: 140ms;
+      --peak-motion-regular: 200ms;
+      --peak-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: #000000;
+      color: var(--peak-color-text-primary);
+      font-family: "Avenir Next", "SF Pro Display", "Segoe UI", "Helvetica Neue", sans-serif;
+      display: grid;
+      place-items: center;
+      padding: var(--peak-space-lg) 14px;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .stack {
+      width: min(760px, 100%);
+      display: grid;
+      gap: var(--peak-space-md);
+      justify-items: center;
+    }
+
+    .peak-logo {
+      width: min(210px, 48vw);
+      height: auto;
+      object-fit: contain;
+      opacity: 0.95;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    .shell {
+      width: min(760px, 100%);
+      border-radius: var(--peak-radius-xl);
+      border: 1px solid var(--peak-color-border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(14px) saturate(118%);
+      -webkit-backdrop-filter: blur(14px) saturate(118%);
+      box-shadow: none;
+      padding: clamp(18px, 3vw, 28px);
+      transform: translateY(6px);
+      opacity: 0;
+      animation: shellIn 260ms var(--peak-ease-out) forwards;
+    }
+
+    @keyframes shellIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .kicker {
+      margin: 0 0 var(--peak-space-xs);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--peak-color-text-secondary);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.58rem, 2.8vw, 2.15rem);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .sub {
+      margin: 10px 0 0;
+      max-width: 68ch;
+      color: var(--peak-color-text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.46;
+    }
+
+    .state { margin-top: var(--peak-space-md); }
+
+    .loading-block { display: grid; gap: 10px; }
+
+    .loading-line,
+    .loading-row {
+      border-radius: var(--peak-radius-sm);
+      background: var(--peak-color-surface-secondary);
+      animation: loadingPulse 1s ease-in-out infinite alternate;
+    }
+
+    .loading-line { height: 16px; width: min(420px, 74%); }
+    .loading-row { height: 52px; width: 100%; }
+
+    @keyframes loadingPulse {
+      from { opacity: 0.42; }
+      to { opacity: 0.9; }
+    }
+
+    .name {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .meta {
+      margin: 6px 0 14px;
+      font-size: 0.82rem;
+      color: var(--peak-color-text-tertiary);
+    }
+
+    .list {
+      display: grid;
+      gap: var(--peak-space-xs);
+      max-height: 316px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .row {
+      display: grid;
+      gap: 5px;
+      border: 1px solid var(--peak-color-border-subtle);
+      border-radius: var(--peak-radius-md);
+      background: var(--peak-color-surface-secondary);
+      padding: 10px 11px;
+    }
+
+    .row-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .row-name {
+      margin: 0;
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sets {
+      color: var(--peak-color-text-tertiary);
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
+    .row-meta {
+      margin: 0;
+      color: var(--peak-color-text-secondary);
+      font-size: 0.75rem;
+      letter-spacing: 0.005em;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: grid;
+      gap: var(--peak-space-xs);
+      margin-top: var(--peak-space-md);
+    }
+
+    button,
+    a.btn {
+      width: 100%;
+      border-radius: var(--peak-radius-pill);
+      border: 1px solid rgba(255, 255, 255, 1);
+      background: rgba(255, 255, 255, 1);
+      color: #101013;
+      padding: var(--peak-space-sm) 14px;
+      font-size: 0.93rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform var(--peak-motion-quick) var(--peak-ease-out), opacity var(--peak-motion-quick) var(--peak-ease-out), color var(--peak-motion-regular) var(--peak-ease-out), border-color var(--peak-motion-regular) var(--peak-ease-out);
+    }
+
+    button:active,
+    a.btn:active { transform: scale(0.97); }
+
+    .primary { font-weight: 700; }
+
+    .support-link {
+      display: inline-block;
+      width: 100%;
+      background: transparent;
+      border: 0;
+      color: var(--peak-color-text-secondary);
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .support-link:hover { color: var(--peak-color-text-primary); }
+
+    .hidden { display: none !important; }
+
+    .status {
+      margin-top: 10px;
+      color: var(--peak-color-text-secondary);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .error {
+      color: var(--peak-color-destructive);
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+  </style>
 </head>
 <body>
-    <div class="card" id="card">
-        <noscript>
-            <p class="error-msg">Please enable JavaScript to view this shared workout.</p>
-        </noscript>
-    </div>
+  <div class="stack">
+    <img class="peak-logo" src="./logo.png" alt="Peak" />
+    <main class="shell" id="shell">
+      <p class="kicker">Shared Workout</p>
+      <h1 id="title">A workout was shared with you</h1>
+      <p class="sub" id="subtitle">Review it and continue in Peak.</p>
 
-    <script>
-        (function() {
-            'use strict';
+      <section id="stateLoading" class="state" aria-hidden="true">
+        <div class="loading-block">
+          <div class="loading-line"></div>
+          <div class="loading-row"></div>
+          <div class="loading-row"></div>
+          <div class="loading-row"></div>
+        </div>
+      </section>
 
-            var MAX_PAYLOAD = 10000;
-            var card = document.getElementById('card');
+      <section id="stateValid" class="state hidden">
+        <p class="name" id="workoutName"></p>
+        <p class="meta" id="meta"></p>
+        <section class="list" id="list"></section>
 
-            // Read ?d= parameter
-            var params = new URLSearchParams(window.location.search);
-            var encoded = params.get('d');
+        <section class="actions">
+          <button id="openAppButton" class="primary" type="button">Open in Peak</button>
+          <a id="appStoreButton" class="support-link" href="https://apps.apple.com/app/peak/id6746268490">Don't have Peak? Download on the App Store</a>
+        </section>
 
-            if (!encoded || encoded.length > MAX_PAYLOAD) {
-                showError('Invalid or missing workout data.');
-                return;
+        <p id="openFallback" class="status hidden">If Peak did not open, continue from the App Store.</p>
+      </section>
+
+      <section id="stateInvalid" class="state hidden">
+        <p class="error" id="errorText">This shared workout could not be loaded.</p>
+        <section class="actions">
+          <a class="btn primary" href="https://apps.apple.com/app/peak/id6746268490">Get Peak on App Store</a>
+          <a id="openAppAnywayLink" class="support-link" href="#">Try opening Peak anyway</a>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var MAX_PARAM_LENGTH = 14000;
+      var MAX_EXERCISES = 20;
+      var params = new URLSearchParams(window.location.search);
+      var encoded = params.get('d');
+
+      var elements = {
+        stateLoading: document.getElementById('stateLoading'),
+        stateValid: document.getElementById('stateValid'),
+        stateInvalid: document.getElementById('stateInvalid'),
+        workoutName: document.getElementById('workoutName'),
+        meta: document.getElementById('meta'),
+        list: document.getElementById('list'),
+        openAppButton: document.getElementById('openAppButton'),
+        openAppAnywayLink: document.getElementById('openAppAnywayLink'),
+        appStoreButton: document.getElementById('appStoreButton'),
+        openFallback: document.getElementById('openFallback'),
+        errorText: document.getElementById('errorText')
+      };
+
+      function setState(stateName) {
+        var isLoading = stateName === 'loading';
+        var isValid = stateName === 'valid';
+        var isInvalid = stateName === 'invalid';
+
+        elements.stateLoading.classList.toggle('hidden', !isLoading);
+        elements.stateValid.classList.toggle('hidden', !isValid);
+        elements.stateInvalid.classList.toggle('hidden', !isInvalid);
+      }
+
+      function showInvalid(message) {
+        elements.errorText.textContent = message;
+        setState('invalid');
+      }
+
+      function fromBase64Url(input) {
+        var base64 = input.replace(/-/g, '+').replace(/_/g, '/');
+        var remainder = base64.length % 4;
+        if (remainder > 0) {
+          base64 += '='.repeat(4 - remainder);
+        }
+        return atob(base64);
+      }
+
+      function normalizeExercise(exercise) {
+        if (!exercise || typeof exercise !== 'object') return null;
+
+        var name = typeof exercise.name === 'string' ? exercise.name.trim() : '';
+        if (!name) return null;
+
+        var config = {};
+        if (exercise.configurationSelection && typeof exercise.configurationSelection === 'object') {
+          var keys = Object.keys(exercise.configurationSelection);
+          for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var value = exercise.configurationSelection[key];
+            if (typeof value === 'string' && value.trim().length > 0) {
+              config[key] = value.trim();
             }
+          }
+        }
 
-            // Decode URL-safe Base64
-            var base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-            var pad = base64.length % 4;
-            if (pad > 0) base64 += '===='.substring(pad);
+        return {
+          id: typeof exercise.id === 'string' ? exercise.id : null,
+          name: name,
+          category: typeof exercise.category === 'string' ? exercise.category : null,
+          muscleGroup: typeof exercise.muscleGroup === 'string' ? exercise.muscleGroup : null,
+          equipment: typeof exercise.equipment === 'string' ? exercise.equipment : null,
+          sets: typeof exercise.sets === 'number' && exercise.sets > 0 ? Math.round(exercise.sets) : null,
+          configurationSelection: config
+        };
+      }
 
-            var json;
-            try {
-                json = JSON.parse(atob(base64));
-            } catch (e) {
-                showError('Could not decode workout data.');
-                return;
+      function normalizeTemplate(rawTemplate) {
+        if (!rawTemplate || typeof rawTemplate !== 'object') return null;
+
+        var name = typeof rawTemplate.name === 'string' ? rawTemplate.name.trim() : '';
+        if (!name) return null;
+
+        if (!Array.isArray(rawTemplate.exercises) || rawTemplate.exercises.length === 0 || rawTemplate.exercises.length > MAX_EXERCISES) {
+          return null;
+        }
+
+        var normalizedExercises = [];
+        for (var i = 0; i < rawTemplate.exercises.length; i++) {
+          var normalized = normalizeExercise(rawTemplate.exercises[i]);
+          if (!normalized) continue;
+          normalizedExercises.push(normalized);
+        }
+        if (normalizedExercises.length === 0) return null;
+
+        var version = typeof rawTemplate.version === 'number' ? rawTemplate.version : 1;
+        if (version !== 1 && version !== 2) return null;
+
+        return {
+          version: version,
+          name: name,
+          exercises: normalizedExercises
+        };
+      }
+
+      function render(template) {
+        elements.workoutName.textContent = template.name;
+        elements.meta.textContent = template.exercises.length + ' exercises';
+        elements.list.textContent = '';
+
+        for (var i = 0; i < template.exercises.length; i++) {
+          var ex = template.exercises[i];
+
+          var row = document.createElement('article');
+          row.className = 'row';
+
+          var top = document.createElement('div');
+          top.className = 'row-main';
+
+          var name = document.createElement('p');
+          name.className = 'row-name';
+          name.textContent = ex.name;
+          top.appendChild(name);
+
+          if (ex.sets) {
+            var sets = document.createElement('span');
+            sets.className = 'sets';
+            sets.textContent = ex.sets + ' sets';
+            top.appendChild(sets);
+          }
+
+          row.appendChild(top);
+
+          var details = [];
+          if (typeof ex.category === 'string' && ex.category.trim()) {
+            var normalizedCategory = ex.category
+              .trim()
+              .replace(/[_-]+/g, ' ')
+              .replace(/\s+/g, ' ')
+              .toLowerCase()
+              .replace(/\b\w/g, function (char) { return char.toUpperCase(); });
+            details.push(normalizedCategory);
+          }
+          if (typeof ex.muscleGroup === 'string' && ex.muscleGroup.trim()) {
+            details.push(ex.muscleGroup.trim());
+          }
+          if (typeof ex.equipment === 'string' && ex.equipment.trim()) {
+            details.push(ex.equipment.trim());
+          }
+
+          var config = ex.configurationSelection || {};
+          var variant =
+            config.bench_angle ||
+            config.position ||
+            config.grip ||
+            config.handle ||
+            config.stance ||
+            '';
+          if (typeof variant === 'string' && variant.trim()) {
+            details.push(variant.trim());
+          }
+
+          if (details.length > 0) {
+            var meta = document.createElement('p');
+            meta.className = 'row-meta';
+            meta.textContent = details.join(' · ');
+            row.appendChild(meta);
+          }
+
+          elements.list.appendChild(row);
+        }
+      }
+
+      function setupOpenActions() {
+        if (elements.openAppAnywayLink) {
+          elements.openAppAnywayLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (!encoded) return;
+            window.location.href = 'peak://import-workout?d=' + encoded;
+          });
+        }
+
+        if (!elements.openAppButton) return;
+        elements.openAppButton.addEventListener('click', function () {
+          if (!encoded) return;
+          window.location.href = 'peak://import-workout?d=' + encoded;
+
+          window.setTimeout(function () {
+            if (elements.openFallback) {
+              elements.openFallback.classList.remove('hidden');
             }
+          }, 1400);
+        });
+      }
 
-            // Validate schema
-            if (typeof json.version !== 'number' || json.version < 1 ||
-                typeof json.name !== 'string' || json.name.length === 0 ||
-                !Array.isArray(json.exercises)) {
-                showError('Invalid workout format.');
-                return;
-            }
+      setState('loading');
+      setupOpenActions();
 
-            // S2: Guard against oversized exercise arrays
-            if (json.exercises.length > 20) {
-                showError('Workout has too many exercises.');
-                return;
-            }
+      if (!encoded) {
+        showInvalid('This shared workout link is incomplete.');
+        return;
+      }
 
-            // Build UI safely (textContent only, no innerHTML with user data)
-            card.textContent = ''; // clear noscript
+      if (encoded.length > MAX_PARAM_LENGTH) {
+        showInvalid('This shared workout link is too large.');
+        return;
+      }
 
-            // Logo
-            var logo = document.createElement('img');
-            logo.className = 'logo';
-            logo.src = 'logo.png?v=2';
-            logo.alt = 'Peak';
-            logo.decoding = 'async';
-            logo.loading = 'eager';
-            logo.addEventListener('error', function() { logo.remove(); });
-            card.appendChild(logo);
+      var parsed;
+      try {
+        parsed = JSON.parse(fromBase64Url(encoded));
+      } catch (_) {
+        showInvalid('This shared workout could not be decoded.');
+        return;
+      }
 
-            // Workout name
-            var nameEl = document.createElement('div');
-            nameEl.className = 'workout-name';
-            nameEl.textContent = json.name;
-            card.appendChild(nameEl);
+      var template = normalizeTemplate(parsed);
+      if (!template) {
+        showInvalid('This shared workout format is not supported.');
+        return;
+      }
 
-            // Exercise count
-            var countEl = document.createElement('div');
-            countEl.className = 'exercise-count';
-            countEl.textContent = json.exercises.length + ' exercise' + (json.exercises.length !== 1 ? 's' : '');
-            card.appendChild(countEl);
-
-            // Exercise list (max 20)
-            var list = document.createElement('ul');
-            list.className = 'exercise-list';
-            var exercises = json.exercises.slice(0, 20);
-            for (var i = 0; i < exercises.length; i++) {
-                var ex = exercises[i];
-                var li = document.createElement('li');
-
-                // S5: Validate exercise name type
-                var nameSpan = document.createElement('span');
-                nameSpan.textContent = (typeof ex.name === 'string' && ex.name.length > 0) ? ex.name : 'Unknown';
-                li.appendChild(nameSpan);
-
-                // S5: Validate sets type
-                if (typeof ex.sets === 'number' && ex.sets > 0 && ex.sets <= 100) {
-                    var setsSpan = document.createElement('span');
-                    setsSpan.className = 'sets';
-                    setsSpan.textContent = ex.sets + ' set' + (ex.sets !== 1 ? 's' : '');
-                    li.appendChild(setsSpan);
-                }
-
-                list.appendChild(li);
-            }
-            if (json.exercises.length > 20) {
-                var moreLi = document.createElement('li');
-                moreLi.textContent = '+ ' + (json.exercises.length - 20) + ' more';
-                list.appendChild(moreLi);
-            }
-            card.appendChild(list);
-
-            // Open in Peak button
-            var deepLink = 'peak://import-workout?d=' + encoded;
-            var fallbackShown = false;
-            var btn = document.createElement('button');
-            btn.className = 'open-btn';
-            btn.textContent = 'Open in Peak';
-            btn.addEventListener('click', function() {
-                window.location.href = deepLink;
-
-                // Fallback to App Store after 1.5s (only once)
-                if (fallbackShown) return;
-                fallbackShown = true;
-                setTimeout(function() {
-                    var fallbackDiv = document.createElement('div');
-                    fallbackDiv.className = 'fallback';
-
-                    var text = document.createTextNode("Don't have Peak? ");
-                    fallbackDiv.appendChild(text);
-
-                    var link = document.createElement('a');
-                    link.href = 'https://apps.apple.com/app/peak/id6746268490';
-                    link.textContent = 'Get it on the App Store';
-                    fallbackDiv.appendChild(link);
-
-                    card.appendChild(fallbackDiv);
-                }, 1500);
-            });
-            card.appendChild(btn);
-
-            function showError(msg) {
-                card.textContent = '';
-                var p = document.createElement('p');
-                p.className = 'error-msg';
-                p.textContent = msg;
-                card.appendChild(p);
-            }
-        })();
-    </script>
+      render(template);
+      setState('valid');
+    })();
+  </script>
 </body>
 </html>
