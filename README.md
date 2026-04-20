@@ -16,23 +16,36 @@ The page decodes the Base64 payload, displays a workout preview, and offers an "
 
 | Parameter | Description |
 |-----------|-------------|
-| `d` | URL-safe Base64-encoded JSON workout template (max 10,000 chars) |
+| `d` | URL-safe Base64-encoded JSON workout template (max 14,000 chars) |
 
-### Payload schema
+### Payload schema (v2)
 
 ```json
 {
-  "version": 1,
+  "version": 2,
   "name": "Push Day",
   "exercises": [
-    { "name": "Bench Press", "category": "push", "muscleGroup": "Chest", "equipment": "Barbell", "sets": 4 }
+    {
+      "id": "bench_press",
+      "name": "Bench Press",
+      "category": "push",
+      "muscleGroup": "Chest",
+      "equipment": "Barbell",
+      "sets": 4,
+      "configurationSelection": {
+        "bench_angle": "Incline",
+        "grip": "Medium"
+      }
+    }
   ]
 }
 ```
 
+Both `version: 1` and `version: 2` payloads are accepted. v2 adds the optional `id` (catalog key) and `configurationSelection` map (variant/grip/stance/position/bench_angle/handle), which surface as the "· variant" chip in the preview.
+
 ### Limits
 
-- Max payload size: 10,000 characters
+- Max payload size: 14,000 characters
 - Max exercises per workout: 20
 
 ## Security
